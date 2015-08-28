@@ -5,11 +5,12 @@ void Logger::init(long baudRate) {
 	Serial.begin(baudRate);
 }
 
-// Logger
+// Write messages
 void Logger::w(char * msg) {
 	w(DEFAULT_TAG, msg);
 }
 	
+// Write Bytes
 void Logger::w(char * key, byte * value, byte len) {
 	w(DEFAULT_TAG, key, value, len);
 }
@@ -29,6 +30,22 @@ void Logger::w(char * tag, char * key, byte value) {
 	Serial.println(value);
 }
 
+// Write floats
+void Logger::w(char * key, float * value, byte len) {
+	w(DEFAULT_TAG, key, value, len);
+}
+
+void Logger::w(char * key, float value) {
+	w(DEFAULT_TAG, key, value);
+}
+
+void Logger::w(char * tag, char * key, float value) {
+	logTag(tag);
+	logKey(key);
+	Serial.println(value, 3);
+}
+
+// Privet methods
 void Logger::w(char * tag, char * key, byte * value, byte len) {
 	logTag(tag);
 	logKey(key);

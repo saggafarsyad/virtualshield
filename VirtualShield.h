@@ -5,6 +5,7 @@
 #include <Arduino.h>
 
 #include "Logger.h"
+#include "Values.h"
 #include "MQTTMessage.h"
 
 // @todo Modify Bluetooth Pins here
@@ -63,7 +64,7 @@ class VirtualShield {
 		void addValue(char * param, long value);
 		void addValue(char * param, float value);
 		void addValue(char * param, char * value);		
-		void sendValues(byte shield);
+		void sendValues();
 		// Set Task
 		// @todo: Add function pointer for callback
 		void setTask();

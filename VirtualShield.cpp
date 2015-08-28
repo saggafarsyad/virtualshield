@@ -18,8 +18,9 @@ VirtualShield::VirtualShield(bool debug)
 void VirtualShield::begin(long baudRate) {
 	// Set default task inteval
 	VirtualShield::taskInterval = 1000;
-	// Begin Bluetooth Serial
+	// Begin Serials
 	Bluetooth.begin(baudRate);
+	Log.init(baudRate);
 	// @todo Reset Sensors	
 	resetSensor();
 	// Reset Buffer Position
@@ -80,7 +81,7 @@ void VirtualShield::listen() {
 
 		case PUBLISH: {
 			// @debug
-			// Log.w("MQTT", "PUBLISH Received");
+			Log.w("MQTT", "PUBLISH Received");
 			// Log.w("MQTT", "Buffer", buffer, remainingLength);
 			
 			// Get Topic
