@@ -4,6 +4,9 @@
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 
+#include "Logger.h"
+#include "MQTTMessage.h"
+
 // @todo Modify Bluetooth Pins here
 #define RX_PIN 13
 #define TX_PIN 12
@@ -95,18 +98,15 @@ class VirtualShield {
 		void sendPublish();
 		void sendUnsubscribe();
 		void sendUnsubscribeAck();
-		// MQTT Message methods
-		byte readTopic(byte type, byte **topicPtr);
-		byte readPayload(byte type, byte * payloadPtr);
 		// Logging
-		void log(char * msg);
-		void log(char * key, byte value);
-		void log(char * key, byte * value, byte len);
-		void log(char * tag, char * msg);
-		void log(char * tag, char * key, byte value);
-		void log(char * tag, char * key, byte * value, byte len);
-		void logTag(char * tag);
-		void logKey(char * key);
+		// void log(char * msg);
+		// void log(char * key, byte value);
+		// void log(char * key, byte * value, byte len);
+		// void log(char * tag, char * msg);
+		// void log(char * tag, char * key, byte value);
+		// void log(char * tag, char * key, byte * value, byte len);
+		// void logTag(char * tag);
+		// void logKey(char * key);
 };	
 
 #endif
