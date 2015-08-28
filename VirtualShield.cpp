@@ -77,9 +77,10 @@ void VirtualShield::listen() {
 		}
 
 		case PUBLISH: {
-			log("MQTT", "Topic", buffer[2]);
-			log("MQTT", "Buffer", buffer, remainingLength);
-		
+			log("MQTT", "PUBLISH Received");
+			// log("MQTT", "Buffer", buffer, remainingLength);
+			
+
 			break;
 		}
 
@@ -89,8 +90,22 @@ void VirtualShield::listen() {
 
 		case SUBACK: {			
 			// @debug			
-			log("MQTT", "SUBACK RECEIVED");
-			// Get Topic Length		
+			// log("MQTT", "SUBACK Received");
+			// log("MQTT", "Buffer", buffer, remainingLength);
+
+			// Get Topic
+			byte *topicPtr;
+			readTopic(type, &topicPtr);
+
+			byte shield = *topicPtr - SHIELD_OFFSET;
+
+			if (isSubscribe[shield] == false) {
+				isSubscribe[shield] = true;
+
+				// @debug
+				log("MQTT", "Topic Subscribed", shield);
+			}
+			
 			break;
 		}
 
@@ -185,7 +200,7 @@ void VirtualShield::sendConnectAck() {
 
 void VirtualShield::sendSubscribe(byte topic) {	
 	// @debug
-	log("Send SUBSCRIBE", topic);
+	// log("Send SUBSCRIBE", topic);
 
 	// Get Total Length
 	byte topicLen = 1;
@@ -213,5 +228,31 @@ void VirtualShield::sendSubscribe(byte topic) {
 	write(msg, totalLen);
 }
 
-// MQTT Message Utilities
+byte VirtualShield::readTopic(byte type, byte **topicPtr) {
+	byte length;
+	byte index;
+	// Get length
+	switch (type) {
+		case SUBACK: {			
+			index =  2;
+			// Get length
+			length = (256 * buffer[index]) + buffer[index++];
+			index++;
+			break;
+		}
 
+		default: return -1;
+	}
+	// Assign Topic Pointer		
+	byte *tmpPtr = buffer;
+	tmpPtr+=index;		
+
+	*topicPtr = tmpPtr;
+	// @debug
+	// log("Index", index);
+	// log("TopicPtr", topicPtr, 1);
+	// Return Length
+	return length;
+}
+
+// byte getPayload(byte type, byte * payloadPtr);

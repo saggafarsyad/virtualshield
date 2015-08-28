@@ -96,10 +96,8 @@ class VirtualShield {
 		void sendUnsubscribe();
 		void sendUnsubscribeAck();
 		// MQTT Message methods
-		byte * getTopic();
-		byte getTopicLength();
-		byte * getPayload();
-		byte getPayloadLength();
+		byte readTopic(byte type, byte **topicPtr);
+		byte readPayload(byte type, byte * payloadPtr);
 		// Logging
 		void log(char * msg);
 		void log(char * key, byte value);
