@@ -205,7 +205,7 @@ void VirtualShield::sendSubscribe(byte topic) {
 
 Location VirtualShield::getLocation(byte * data) {
 	float tmp[2];
-	Decoder.read(data, tmp);
+	BufferProcessor.read(data, tmp);
 
 	Location result;
 	result.lat = tmp[0];
@@ -216,7 +216,7 @@ Location VirtualShield::getLocation(byte * data) {
 
 Accelerometer VirtualShield::getAccelerometer(byte * data) {
 	float tmp[3];
-	Decoder.read(data, tmp);
+	BufferProcessor.read(data, tmp);
 
 	Accelerometer result;
 	result.x = tmp[0];

@@ -104,14 +104,6 @@ class VirtualShield {
 		void sendUnsubscribe();
 		void sendUnsubscribeAck();
 		// Logging
-		// void log(char * msg);
-		// void log(char * key, byte value);
-		// void log(char * key, byte * value, byte len);
-		// void log(char * tag, char * msg);
-		// void log(char * tag, char * key, byte value);
-		// void log(char * tag, char * key, byte * value, byte len);
-		// void logTag(char * tag);
-		// void logKey(char * key);
 };	
 
 #endif

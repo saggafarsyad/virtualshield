@@ -40,6 +40,6 @@ public:
 	byte write (char * value);	
 };
 
-extern Buffer Decoder;
+extern Buffer BufferProcessor;
 
 #endif

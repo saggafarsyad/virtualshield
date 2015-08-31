@@ -2,7 +2,7 @@
 #include "Buffer.h"
 #include "Logger.h"
 
-Buffer Decoder = Buffer();
+Buffer BufferProcessor = Buffer();
 
 int Buffer::getInt(byte * data) {
 	int result = 0;
