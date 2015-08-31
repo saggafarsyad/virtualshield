@@ -67,9 +67,8 @@ class VirtualShield {
 		void sendValues();
 		// Set Task
 		// @todo: Add function pointer for callback
-		void setTask();
-		void setTaskPeriod(long millis);
-		void runTask(void(*)(void));
+		void runTask();		
+		void setTask(void(*)(), unsigned long millis);		
 		void unsetTask();		
 		// Get Sensor data
 		// Sensor
@@ -88,6 +87,7 @@ class VirtualShield {
 		bool connectFlag;
 		bool debugFlag;
 		// Periodic Task
+		TaskCallback taskCallback;
 		unsigned long taskInterval;
 		unsigned long runningInterval;
 		// Shield Subscription and Callbacks

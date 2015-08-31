@@ -23,6 +23,8 @@ void VirtualShield::begin(long baudRate) {
 	Log.init(baudRate);
 	// @todo Reset Sensors	
 	resetSensor();
+	// Unset Task
+	unsetTask();
 	// Reset Buffer Position
 	VirtualShield::bufferPos = 0;
 	// @debug
@@ -225,3 +227,26 @@ Accelerometer VirtualShield::getAccelerometer(byte * data) {
 	
 	return result;
 }
+
+void VirtualShield::runTask() {	
+	unsigned long currentInterval = millis();
+
+  	if (currentInterval - runningInterval >= taskInterval) {        
+    	runningInterval = currentInterval;
+
+	    // Call Task
+	    if (taskCallback != 0) {
+      	  	void (*task)() = taskCallback;
+      		task();  
+    	}      
+  	}
+}
+
+void VirtualShield::setTask(void(*callback)(), unsigned long millis) {
+	VirtualShield::taskInterval = millis;
+	VirtualShield::taskCallback = callback;
+}	
+
+void VirtualShield::unsetTask() {
+	VirtualShield::taskCallback = 0;
+}	
