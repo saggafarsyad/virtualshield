@@ -202,3 +202,26 @@ void VirtualShield::sendSubscribe(byte topic) {
 
 	write(msg, totalLen);
 }
+
+Location VirtualShield::getLocation(byte * data) {
+	float tmp[2];
+	Decoder.read(data, tmp);
+
+	Location result;
+	result.lat = tmp[0];
+	result.lng = tmp[1];	
+
+	return result;
+}
+
+Accelerometer VirtualShield::getAccelerometer(byte * data) {
+	float tmp[3];
+	Decoder.read(data, tmp);
+
+	Accelerometer result;
+	result.x = tmp[0];
+	result.y = tmp[1];	
+	result.z = tmp[2];	
+	
+	return result;
+}

@@ -24,14 +24,6 @@ public:
 	// setBufferPos(byte position);
 	// getBuffer();
 	// getBufferPos();	
-
-	// Sensor
-	Location getLocation(byte * data);
-	Accelerometer getAccelerometer(byte * data);	
-
-private: 		
-	byte * payload();
-
 	char getChar(byte * data);	
 	int getInt(byte * data);
 	long getLong(byte * data);
@@ -45,8 +37,7 @@ private:
 	byte write (float value);
 	byte write (long value);
 	byte write (char value);
-	byte write (char * value);
-
+	byte write (char * value);	
 };
 
 extern Buffer Decoder;

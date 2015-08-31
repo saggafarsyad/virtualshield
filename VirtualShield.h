@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "Logger.h"
-#include "Values.h"
+#include "Buffer.h"
 #include "MQTTMessage.h"
 
 // @todo Modify Bluetooth Pins here
@@ -71,6 +71,10 @@ class VirtualShield {
 		void setTaskPeriod(long millis);
 		void runTask(void(*)(void));
 		void unsetTask();		
+		// Get Sensor data
+		// Sensor
+		Location getLocation(byte * buffer);
+		Accelerometer getAccelerometer(byte * buffer);
 	private:
 		// Buffer
 		byte buffer[BUFFER_SIZE];

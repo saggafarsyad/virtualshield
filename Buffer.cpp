@@ -4,29 +4,6 @@
 
 Buffer Decoder = Buffer();
 
-Location Buffer::getLocation(byte * data) {
-	float tmp[2];
-	read(data, tmp);
-
-	Location result;
-	result.lat = tmp[0];
-	result.lng = tmp[1];	
-
-	return result;
-}
-
-Accelerometer Buffer::getAccelerometer(byte * data) {
-	float tmp[3];
-	read(data, tmp);
-
-	Accelerometer result;
-	result.x = tmp[0];
-	result.y = tmp[1];	
-	result.z = tmp[2];	
-	
-	return result;
-}
-
 int Buffer::getInt(byte * data) {
 	int result = 0;
 
