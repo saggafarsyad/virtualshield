@@ -65,3 +65,46 @@ byte Buffer::read(byte * data, float * targetPtr) {
 
 	return len;
 }
+
+byte Buffer::write(char * value, byte *buffer) {
+	byte i = 0;
+
+	while (value[i] != '\0' && i < 128) {
+		*buffer = (byte) value[i];
+		i++; buffer++;
+	}
+
+	return i;
+}
+
+byte Buffer::write(float value, byte *buffer) {
+	union floatByte { 
+    	byte b[4];
+    	float f;
+  	} res;
+
+	res.f = value; 
+	byte i = 0;
+	while (i < 4) {
+		*buffer = res.b[i];
+		i++; buffer++;
+	}
+
+	return i;
+}
+
+byte Buffer::write(int value, byte *buffer) {
+	*buffer = value & 0xFF; buffer++;
+	*buffer = (value >> 8) & 0xFF;
+
+	return 2;
+}
+
+byte Buffer::write(long value, byte *buffer) {
+  *buffer = value & 0xFF; buffer++;
+  *buffer = (value >> 8) & 0xFF; buffer++;
+  *buffer = (value >> 16) & 0xFF; buffer++;
+  *buffer = (value >> 24) & 0xFF; buffer++;
+
+  return 4;
+}

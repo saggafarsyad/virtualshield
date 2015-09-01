@@ -7,14 +7,18 @@ VirtualShield shield(true);
 // Code here to send data periodically
 void send() {
 	// Do stuff such reading sensor
-	Serial.println("Sending data...");
+	long testData = millis();
+
+	shield.addData("getValue_mq135", testData);
+	shield.addData("getValue_mq2", testData/10);
+	shield.sendData();
 }
 
 void setup() {  
 	// @todo: 2. Start Shield 	
 	shield.begin(115200);
 	// @todo: 3. Set Task
-	shield.setTask(send, 1000);
+	shield.setTask(send, 10000);
 }
 
 void loop() {	

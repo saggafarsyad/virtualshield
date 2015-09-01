@@ -26,7 +26,7 @@ void VirtualShield::begin(long baudRate) {
 	// Unset Task
 	unsetTask();
 	// Reset Buffer Position
-	VirtualShield::bufferPos = 0;
+	flushBuffer();
 	// @debug
 	Log.w("Ready");
 }
@@ -40,6 +40,9 @@ void VirtualShield::flushBuffer() {
 	for (byte i = 0; i < BUFFER_SIZE; i++) {
 		buffer[i] = 0;	
 	}
+
+	bufferPos = 0;
+	dataCount = 0;
 }
 
 void VirtualShield::listen() {
@@ -238,6 +241,7 @@ void VirtualShield::runTask() {
 	    if (taskCallback != 0) {
       	  	void (*task)() = taskCallback;
       		task();  
+      		return;
     	}      
   	}
 }
@@ -250,3 +254,129 @@ void VirtualShield::setTask(void(*callback)(), unsigned long millis) {
 void VirtualShield::unsetTask() {
 	VirtualShield::taskCallback = 0;
 }	
+
+byte VirtualShield::addKey(char * key, byte cmd) {	
+	// Log.w("Parse Command", cmd);	
+	// Write Key to Buffer, return length
+	byte keyLength = BufferProcessor.write(key, &buffer[VirtualShield::bufferPos + 1]);	
+	// Check keyLength
+	if (keyLength > 31) return -1;
+	// Add Key Header, consist Command to Parse and Length
+	buffer[bufferPos] = cmd << 5 | keyLength;	
+	// @debug
+	// Log.w(key, keyLength);
+	// Return last buffer position
+	return keyLength + 1;
+}
+
+void VirtualShield::addData(char * key, int value) {
+	// Write key and get buffer position
+	byte keyLength = addKey(key, PARSE_INT); 
+	byte index = bufferPos + keyLength;
+	// Write value to buffer
+	byte valueLength = BufferProcessor.write(value, &buffer[index + 1]);		
+	// Add value header, consist of value length
+	buffer[index] = valueLength;
+	// Save last buffer position	
+	bufferPos += keyLength + valueLength + 1;
+	// Save param count
+	dataCount++;	
+	// @debug
+	// Log.w("Buffer", buffer, bufferPos);	
+}
+
+void VirtualShield::addData(char * key, long value) {
+	// Write key and get buffer position
+	byte keyLength = addKey(key, PARSE_LONG); 
+	byte index = bufferPos + keyLength;
+	// Write value to buffer
+	byte valueLength = BufferProcessor.write(value, &buffer[index + 1]);		
+	// Add value header, consist of value length
+	buffer[index] = valueLength;
+	// Save last buffer position	
+	bufferPos += keyLength + valueLength + 1;
+	// Save param count
+	dataCount++;	
+	// @debug
+	// Log.w("Buffer", buffer, bufferPos);	
+}
+
+void VirtualShield::addData(char * key, float value) {
+	// Write key and get buffer position
+	byte keyLength = addKey(key, PARSE_FLOAT); 
+	byte index = bufferPos + keyLength;
+	// Write value to buffer
+	byte valueLength = BufferProcessor.write(value, &buffer[index + 1]);		
+	// Add value header, consist of value length
+	buffer[index] = valueLength;
+	// Save last buffer position	
+	bufferPos += keyLength + valueLength + 1;
+	// Save param count
+	dataCount++;	
+	// @debug
+	// Log.w("Buffer", buffer, bufferPos);	
+}
+
+void VirtualShield::addData(char * key, char * value) {
+	// Write key and get buffer position
+	byte keyLength = addKey(key, PARSE_STRING); 
+	byte index = bufferPos + keyLength;
+	// Write value to buffer
+	byte valueLength = BufferProcessor.write(value, &buffer[index + 1]);		
+	// Add value header, consist of value length
+	buffer[index] = valueLength;
+	// Save last buffer position	
+	bufferPos += keyLength + valueLength + 1;
+	// Save param count
+	dataCount++;	
+	// @debug
+	// Log.w("Buffer", buffer, bufferPos);	
+}
+
+void VirtualShield::sendData() {
+	if (isConnected()) {
+		// Send Publish
+		sendPublish("is", 2, buffer, bufferPos);
+		// Flush buffer
+		flushBuffer();
+	}
+}
+
+void VirtualShield::sendPublish(char * topic, byte topicLength, byte * payload, byte payloadLength) {
+	// Init messages
+	byte totalLength = topicLength + payloadLength + 5;
+	byte msg[totalLength];
+	byte index = 0;
+
+	// Fixed Header
+	msg[index] = 48; index++;
+	// Remaining Length
+	msg[index] = totalLength - 2; index++;
+	// Topic MSB/LSB
+	msg[index] = 0; index++;
+	msg[index] = topicLength; index++;
+	// Topic
+	for (byte x = 0; x < topicLength; x++) {
+		msg[index] = (byte) topic[x];
+		index++;
+	}	
+	// Payload
+	// Add Data Count
+	msg[index] = dataCount; index++;
+
+	for (byte y = 0; y < payloadLength; y++) {
+		msg[index] = payload[y];
+		index++;
+	}
+
+	write(msg, totalLength);
+
+	// @debug
+	// Log.w("index", index);
+	// Log.w("totalLength", totalLength);
+	// Log.w("MQTT PUBLISH", msg, totalLength);
+}
+
+bool VirtualShield::isConnected() {
+	return connectFlag;
+}

@@ -20,10 +20,7 @@ class Buffer {
 public:
 	// Default constructor
 	Buffer(){};
-	// setBuffer(byte * buffer);
-	// setBufferPos(byte position);
-	// getBuffer();
-	// getBufferPos();	
+
 	char getChar(byte * data);	
 	int getInt(byte * data);
 	long getLong(byte * data);
@@ -33,11 +30,11 @@ public:
 	// Read Float to Array, return length
 	byte read(byte * data, float * targetPtr);	
 		
-	byte write (int value);
-	byte write (float value);
-	byte write (long value);
-	byte write (char value);
-	byte write (char * value);	
+	byte write (int value, byte *bufferPtr);
+	byte write (float value, byte *bufferPtr);
+	byte write (long value, byte *bufferPtr);
+	byte write (char value, byte *bufferPtr);
+	byte write (char * value, byte *bufferPtr);	
 };
 
 extern Buffer BufferProcessor;

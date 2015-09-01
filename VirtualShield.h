@@ -24,6 +24,12 @@
 #define ACCELEROMETER 2
 #define PUSH_NOTIFICATION 3
 
+// PARSER COMMANDS
+#define PARSE_INT 1
+#define PARSE_LONG 2
+#define PARSE_FLOAT 3
+#define PARSE_STRING 4
+
 // MQTT Messages
 #define CONNECT       0x01  // client request to connect to server *
 #define CONNACK       0x02  // connect acknowledgment *
@@ -54,17 +60,16 @@ class VirtualShield {
 		// Listen for incoming messages
 		void listen();
 		// Check for Connection
-		bool isConnected(void);
+		bool isConnected();
 		// Sensor Shield
 		void addSensor(byte shield, void(*)(byte *, byte));
 		void removeSensor(byte shield);
 		// Internet Shield
-		void addValue(char * param, byte value);
-		void addValue(char * param, int value);
-		void addValue(char * param, long value);
-		void addValue(char * param, float value);
-		void addValue(char * param, char * value);		
-		void sendValues();
+		void addData(char * key, int value);
+		void addData(char * key, long value);
+		void addData(char * key, float value);
+		void addData(char * key, char * value);		
+		void sendData();
 		// Set Task
 		// @todo: Add function pointer for callback
 		void runTask();		
@@ -78,11 +83,13 @@ class VirtualShield {
 		// Buffer
 		byte buffer[BUFFER_SIZE];
 		byte bufferPos;
+		// Size of Data saved in buffer
+		byte dataCount;
 		void flushBuffer();
 		// Write and flush
 		void write(uint8_t *bufferPtr, size_t len);
 		// Internet Shield
-		byte paramCount;
+		
 		// Flags
 		bool connectFlag;
 		bool debugFlag;
@@ -95,15 +102,16 @@ class VirtualShield {
 		SensorCallback sensorCallback[SHIELD_COUNT];
 		void resetSensor();
 		// Internet Shield
-		void addValue(char * param, byte * value, byte length, byte cmd);
+		// Add Key to buffer, return buffer position
+		byte addKey(char * key, byte cmd);
 		// MQTT Sender methods;		
 		void sendConnectAck();
 		void sendSubscribe(byte topic);
 		void sendSubscribeAck();		
-		void sendPublish();
+		void sendPublish(char * topic, byte topicLength, byte * payload, byte payloadLength);
 		void sendUnsubscribe();
 		void sendUnsubscribeAck();
 		// Logging
 };	
 
-#endif
+#endif	
