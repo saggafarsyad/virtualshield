@@ -4,6 +4,10 @@
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 
+#include "Logger.h"
+#include "Buffer.h"
+#include "MQTTMessage.h"
+
 // @todo Modify Bluetooth Pins here
 #define RX_PIN 13
 #define TX_PIN 12
@@ -19,6 +23,12 @@
 #define LOCATION 1
 #define ACCELEROMETER 2
 #define PUSH_NOTIFICATION 3
+
+// PARSER COMMANDS
+#define PARSE_INT 1
+#define PARSE_LONG 2
+#define PARSE_FLOAT 3
+#define PARSE_STRING 4
 
 // MQTT Messages
 #define CONNECT       0x01  // client request to connect to server *
@@ -50,36 +60,41 @@ class VirtualShield {
 		// Listen for incoming messages
 		void listen();
 		// Check for Connection
-		bool isConnected(void);
+		bool isConnected();
 		// Sensor Shield
 		void addSensor(byte shield, void(*)(byte *, byte));
 		void removeSensor(byte shield);
 		// Internet Shield
-		void addValue(char * param, byte value);
-		void addValue(char * param, int value);
-		void addValue(char * param, long value);
-		void addValue(char * param, float value);
-		void addValue(char * param, char * value);		
-		void sendValues(byte shield);
+		void addData(char * key, int value);
+		void addData(char * key, long value);
+		void addData(char * key, float value);
+		void addData(char * key, char * value);		
+		void sendData();
 		// Set Task
 		// @todo: Add function pointer for callback
-		void setTask();
-		void setTaskPeriod(long millis);
-		void runTask(void(*)(void));
+		void runTask();		
+		void setTask(void(*)(), unsigned long millis);		
 		void unsetTask();		
+		// Get Sensor data
+		// Sensor
+		Location getLocation(byte * buffer);
+		Accelerometer getAccelerometer(byte * buffer);
 	private:
 		// Buffer
 		byte buffer[BUFFER_SIZE];
 		byte bufferPos;
+		// Size of Data saved in buffer
+		byte dataCount;
 		void flushBuffer();
 		// Write and flush
 		void write(uint8_t *bufferPtr, size_t len);
 		// Internet Shield
-		byte paramCount;
+		
 		// Flags
 		bool connectFlag;
 		bool debugFlag;
 		// Periodic Task
+		TaskCallback taskCallback;
 		unsigned long taskInterval;
 		unsigned long runningInterval;
 		// Shield Subscription and Callbacks
@@ -87,28 +102,16 @@ class VirtualShield {
 		SensorCallback sensorCallback[SHIELD_COUNT];
 		void resetSensor();
 		// Internet Shield
-		void addValue(char * param, byte * value, byte length, byte cmd);
+		// Add Key to buffer, return buffer position
+		byte addKey(char * key, byte cmd);
 		// MQTT Sender methods;		
 		void sendConnectAck();
 		void sendSubscribe(byte topic);
 		void sendSubscribeAck();		
-		void sendPublish();
+		void sendPublish(char * topic, byte topicLength, byte * payload, byte payloadLength);
 		void sendUnsubscribe();
 		void sendUnsubscribeAck();
-		// MQTT Message methods
-		byte * getTopic();
-		byte getTopicLength();
-		byte * getPayload();
-		byte getPayloadLength();
 		// Logging
-		void log(char * msg);
-		void log(char * key, byte value);
-		void log(char * key, byte * value, byte len);
-		void log(char * tag, char * msg);
-		void log(char * tag, char * key, byte value);
-		void log(char * tag, char * key, byte * value, byte len);
-		void logTag(char * tag);
-		void logKey(char * key);
 };	
 
-#endif
+#endif	
