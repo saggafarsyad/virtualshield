@@ -75,7 +75,7 @@ void VirtualShield::listen() {
 			for(byte i = 1; i < SHIELD_COUNT; i++) {
 				if (sensorCallback[i] != 0 && isSubscribe[i] == false) {			
 					// @debug
-					Log.w("MQTT", "Send SUBSCRIBE", i);
+					// Log.w("MQTT", "Send SUBSCRIBE", i);
 					delay(30);
 					sendSubscribe(i + SHIELD_OFFSET);	
 					isSubscribe[i] = true;
