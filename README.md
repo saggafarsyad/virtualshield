@@ -1,10 +1,16 @@
-# VirtualShield
-VirtualShield is a toolkit based on Android smartphone to help you prototype IoT Hardware using Arduino without using Shield. This toolkit consist of Android app and Arduino Library
+Welcome to the VirtualShield Wiki!
 
-## Requirement
-* Arduino Board (tested with Arduino Uno)
-* Bluetooth Module with 115200 baud rate (tested with Bluetooth HC-05)
-* Android Smartphone with VirtualShield app installed (will be released soon)
+VirtualShield is a prototyping toolkit for Arduino. The toolkit use your Android device to act like Arduino Shield and sensors, such as sending data to Middleware or getting location data. The toolkit can help you learn Arduino with less cost and less code. [**Now, let's get build things!**](https://github.com/saggafarsyad/VirtualShield/wiki/Getting-Started)
+
+## Requirements
+* Arduino board/modules
+* Android device with Bluetooth support
+* Bluetooth module with baud rate 115200 (I recommend HC-05 module)
+
+## Feature
+* Internet Shield, send data to your web service
+* Sensor Shield, use Android sensors. Only Accelerometer and Location sensor is currently available
+* Run in background
 
 ## Feedback
-Please send your feedback to saggaf@area54labs.net
+Please kindly fill the feedback [**here**](https://docs.google.com/forms/d/1GNHjTemEVjWcYnfhEpWde8X-b3a8A2DTP0hBY57nzf8/viewform) to help me improve the toolkit.
