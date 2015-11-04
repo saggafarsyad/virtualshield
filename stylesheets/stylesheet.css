@@ -15,11 +15,12 @@ a {
   a:hover {
     color: #06763A; }
 
-.btn {
+.btn {  
   display: inline-block;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgba(255, 255, 255, 0.08);
+  font-weight: bold;
+  color: #08A954;
+  background-color: rgba(255, 255, 255, 1);
   border-color: rgba(255, 255, 255, 0.2);
   border-style: solid;
   border-width: 1px;
